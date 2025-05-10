@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class CardDemonstrationDialog extends StatelessWidget {
-
   final pageWidth = 342.0;
   final pageHeight = 399.0;
 
@@ -149,7 +148,6 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
           });
         });
       }
-      if (status == AnimationStatus.completed) {}
     });
   }
 
@@ -188,7 +186,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
           Positioned(
             top: 0,
             left: 30,
-            child: _Dialer(controller: _dialerController),
+            child: Dialer(controller: _dialerController),
           ),
         ],
       ),
@@ -224,85 +222,76 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
   }
 }
 
-class _Dialer extends StatefulWidget {
-  const _Dialer({super.key, this.controller});
-
+class Dialer extends StatelessWidget {
   final DialerController? controller;
 
-  @override
-  State<_Dialer> createState() => _DialerState();
-}
-
-class _DialerState extends State<_Dialer> {
-  String? activeKey;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller?.addListener(() {
-      setState(() {
-        activeKey = widget.controller?.activeKey;
-      });
-    });
-  }
+  const Dialer({super.key, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => widget.controller ?? DialerController(),
+      create: (context) => controller ?? DialerController(),
       builder: (context, child) {
         final keys = context.read<DialerController>().keys;
-        return Container(
-          width: 283,
-          height: 240,
-          color: Color(0XFFE8EAED),
-          child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: keys.length,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 4,
-              childAspectRatio: 1.9,
-            ),
-            itemBuilder: (context, index) {
-              final key = keys[index];
-              final isActive = activeKey == key;
-              if (key == 'del') {
-                return Icon(Icons.backspace_outlined, color: Colors.black);
-              }
+        return Selector<DialerController, String?>(
+          builder: (context, activeKey, child) {
+            return Container(
+              width: 283,
+              height: 240,
+              color: Color(0XFFE8EAED),
+              child: GridView.builder(
+                shrinkWrap: true,
+                itemCount: keys.length,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 4,
+                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 4,
+                  childAspectRatio: 1.9,
+                ),
+                itemBuilder: (context, index) {
+                  final key = keys[index];
+                  final isActive = activeKey == key;
+                  if (key == 'del') {
+                    return Icon(Icons.backspace_outlined, color: Colors.black);
+                  }
 
-              return IgnorePointer(
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    color: isActive ? Colors.grey.shade400 : Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade600,
-                        blurRadius: 0,
-                        offset: const Offset(0, 0.6),
+                  return IgnorePointer(
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: isActive ? Colors.grey.shade400 : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade600,
+                            blurRadius: 0,
+                            offset: const Offset(0, 0.6),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      key,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontFamily: 'Work Sans',
-                        fontWeight: FontWeight.w500,
+                      child: Center(
+                        child: Text(
+                          key,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 25,
+                            fontFamily: 'Work Sans',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            );
+          },
+          selector: (context, vm) => vm.activeKey,
         );
       },
     );
@@ -333,9 +322,9 @@ class DialerController extends ChangeNotifier {
       setActiveKey(pressedKeys[i]);
       await Future.delayed(Duration(milliseconds: 400));
       setActiveKey(null);
-      if(i == pressedKeys.length - 1) {
+      if (i == pressedKeys.length - 1) {
         await Future.delayed(Duration(milliseconds: 100));
-      }else{
+      } else {
         await Future.delayed(Duration(milliseconds: 400));
       }
     }
