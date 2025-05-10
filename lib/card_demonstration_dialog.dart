@@ -110,11 +110,11 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
     super.initState();
     _readerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 350),
     );
     _cardController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 350),
     );
     _readerAnimation = Tween<double>(
       begin: -300,
@@ -134,7 +134,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         Future.delayed(Duration(milliseconds: 500), () {
           if (!mounted) return;
-          final targetTweenValue = 15.0;
+          final targetTweenValue = 12.0;
           final normalizedValue = targetTweenValue / 300.0;
           _cardController.animateBack(normalizedValue).then((v) {
             Future.delayed(const Duration(milliseconds: 200), () {
@@ -142,11 +142,11 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
                 if (!mounted) return;
                 _activeReaderCurve = Curves.linear;
                 _readerController
-                    .animateBack(0, duration: Duration(milliseconds: 100))
+                    .animateBack(0, duration: Duration(milliseconds: 150))
                     .then((_) => _activeReaderCurve = GentleBackCurve());
                 _cardController.animateBack(
                   0,
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 300),
                   curve: GentleBackCurve(),
                 );
               });
@@ -160,15 +160,9 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
 
   void _readerStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.dismissed) {
-      Future.delayed(const Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         _activeReaderCurve = GentleBackCurve();
         _cardController.forward();
-        _readerController.forward();
-      });
-    }
-    if (status == AnimationStatus.reverse) {
-      Future.delayed(Duration(milliseconds: 1000), () {
-        if (!mounted) return;
         _readerController.forward();
       });
     }
@@ -340,11 +334,15 @@ class DialerController extends ChangeNotifier {
   final pressedKeys = ['7', '8', '2', '5'];
 
   Future<void> _startFakeKeypressAnimation() async {
-    for (String i in pressedKeys) {
-      setActiveKey(i);
+    for (int i = 0; i < pressedKeys.length; i++) {
+      setActiveKey(pressedKeys[i]);
       await Future.delayed(Duration(milliseconds: 400));
       setActiveKey(null);
-      await Future.delayed(Duration(milliseconds: 400));
+      if(i == pressedKeys.length - 1) {
+        await Future.delayed(Duration(milliseconds: 100));
+      }else{
+        await Future.delayed(Duration(milliseconds: 400));
+      }
     }
   }
 
@@ -366,7 +364,7 @@ class DialerController extends ChangeNotifier {
 class GentleBackCurve extends Curve {
   final double overshoot;
 
-  const GentleBackCurve({this.overshoot = 0.7});
+  const GentleBackCurve({this.overshoot = 1});
 
   @override
   double transform(double t) {
