@@ -4,17 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CardDemonstrationDialog extends StatefulWidget {
-  const CardDemonstrationDialog({super.key});
+class CardDemonstrationDialog extends StatelessWidget {
 
-  @override
-  State<CardDemonstrationDialog> createState() =>
-      _CardDemonstrationDialogState();
-}
-
-class _CardDemonstrationDialogState extends State<CardDemonstrationDialog> {
   final pageWidth = 342.0;
   final pageHeight = 399.0;
+
+  const CardDemonstrationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
