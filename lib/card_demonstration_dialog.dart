@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+final _kGentleDuration = Duration(milliseconds: 350);
+final _kNormalDuration = Duration(milliseconds: 500);
+final _kSubtleDuration = Duration(milliseconds: 300);
+final _kSlowDuration = Duration(milliseconds: 200);
+
 class CardDemonstrationDialog extends StatelessWidget {
   final cardAnimationContainerWidth = 342.0;
   final cardAnimationContainerHeight = 399.0;
@@ -101,11 +106,11 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
     super.initState();
     _readerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: _kGentleDuration,
     );
     _cardController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: _kGentleDuration,
     );
     _readerAnimation = Tween<double>(
       begin: -300,
@@ -117,7 +122,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
     ).animate(
       CurvedAnimation(parent: _cardController, curve: GentleBackCurve()),
     );
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(_kGentleDuration, () {
       if (!mounted) return;
       _readerController.forward();
       _cardController.forward();
@@ -129,7 +134,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
 
   void _readerStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.dismissed) {
-      Future.delayed(const Duration(milliseconds: 300), () {
+      Future.delayed(_kSubtleDuration, () {
         _activeReaderCurve = GentleBackCurve();
         _cardController.forward();
         _readerController.forward();
@@ -139,12 +144,12 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
 
   void _cardStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(_kNormalDuration, () {
         if (!mounted) return;
         final targetTweenValue = 12.0;
-        final normalizedValue = targetTweenValue / 300.0;
+        final normalizedValue = targetTweenValue / _cardPositionEnd;
         _cardController.animateBack(normalizedValue).then((v) {
-          Future.delayed(const Duration(milliseconds: 200), () {
+          Future.delayed(_kSlowDuration, () {
             _dialerController.begin().then((_) {
               if (!mounted) return;
               _activeReaderCurve = Curves.linear;
@@ -153,7 +158,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
                   .then((_) => _activeReaderCurve = GentleBackCurve());
               _cardController.animateBack(
                 0,
-                duration: const Duration(milliseconds: 300),
+                duration: _kSubtleDuration,
                 curve: GentleBackCurve(),
               );
             });
