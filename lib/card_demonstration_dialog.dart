@@ -124,31 +124,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
     });
 
     _readerAnimation.addStatusListener(_readerStatusListener);
-    _cardAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(Duration(milliseconds: 500), () {
-          if (!mounted) return;
-          final targetTweenValue = 12.0;
-          final normalizedValue = targetTweenValue / 300.0;
-          _cardController.animateBack(normalizedValue).then((v) {
-            Future.delayed(const Duration(milliseconds: 200), () {
-              _dialerController.begin().then((_) {
-                if (!mounted) return;
-                _activeReaderCurve = Curves.linear;
-                _readerController
-                    .animateBack(0, duration: Duration(milliseconds: 150))
-                    .then((_) => _activeReaderCurve = GentleBackCurve());
-                _cardController.animateBack(
-                  0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: GentleBackCurve(),
-                );
-              });
-            });
-          });
-        });
-      }
-    });
+    _cardAnimation.addStatusListener(_cardStatusListener);
   }
 
   void _readerStatusListener(AnimationStatus status) {
@@ -157,6 +133,32 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
         _activeReaderCurve = GentleBackCurve();
         _cardController.forward();
         _readerController.forward();
+      });
+    }
+  }
+
+  void _cardStatusListener(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      Future.delayed(Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        final targetTweenValue = 12.0;
+        final normalizedValue = targetTweenValue / 300.0;
+        _cardController.animateBack(normalizedValue).then((v) {
+          Future.delayed(const Duration(milliseconds: 200), () {
+            _dialerController.begin().then((_) {
+              if (!mounted) return;
+              _activeReaderCurve = Curves.linear;
+              _readerController
+                  .animateBack(0, duration: Duration(milliseconds: 150))
+                  .then((_) => _activeReaderCurve = GentleBackCurve());
+              _cardController.animateBack(
+                0,
+                duration: const Duration(milliseconds: 300),
+                curve: GentleBackCurve(),
+              );
+            });
+          });
+        });
       });
     }
   }
@@ -216,6 +218,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
   @override
   void dispose() {
     _readerController.removeStatusListener(_readerStatusListener);
+    _cardController.removeStatusListener(_cardStatusListener);
     _readerController.dispose();
     _cardController.dispose();
     super.dispose();
