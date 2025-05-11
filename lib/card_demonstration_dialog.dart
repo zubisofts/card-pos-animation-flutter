@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class CardDemonstrationDialog extends StatelessWidget {
-  final pageWidth = 342.0;
-  final pageHeight = 399.0;
+  final cardAnimationContainerWidth = 342.0;
+  final cardAnimationContainerHeight = 399.0;
 
   const CardDemonstrationDialog({super.key});
 
@@ -19,8 +19,8 @@ class CardDemonstrationDialog extends StatelessWidget {
         const SizedBox(height: 32),
         ClipRect(
           child: SizedBox(
-            width: pageWidth,
-            height: pageHeight,
+            width: cardAnimationContainerWidth,
+            height: cardAnimationContainerHeight,
             child: Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
