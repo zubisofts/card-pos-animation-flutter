@@ -122,7 +122,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
     ).animate(
       CurvedAnimation(parent: _cardController, curve: GentleBackCurve()),
     );
-    Future.delayed(_kGentleDuration, () {
+    Future.delayed(Duration(seconds: 1), () {
       if (!mounted) return;
       _readerController.forward();
       _cardController.forward();
