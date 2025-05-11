@@ -99,6 +99,9 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
   final _dialerController = DialerController();
   Curve _activeReaderCurve = GentleBackCurve();
 
+  final double _cardPositionStart = 0;
+  final double _cardPositionEnd = 300;
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +117,10 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
       begin: -300,
       end: 0,
     ).animate(_readerController);
-    _cardAnimation = Tween<double>(begin: 0, end: 300).animate(
+    _cardAnimation = Tween<double>(
+      begin: _cardPositionStart,
+      end: _cardPositionEnd,
+    ).animate(
       CurvedAnimation(parent: _cardController, curve: GentleBackCurve()),
     );
     Future.delayed(Duration(milliseconds: 500), () {
@@ -178,7 +184,7 @@ class _CardReaderState extends State<CardReader> with TickerProviderStateMixin {
           end: 0,
         ).transform(curvedValue);
 
-        return Transform.translate(offset: Offset(0, position), child: child);
+        return Transform.translate(offset: Offset(-1, position), child: child);
       },
       child: Stack(
         children: [
