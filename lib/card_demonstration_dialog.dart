@@ -42,39 +42,33 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 20,
         children: [
-          SizedBox(
-            width: 361,
-            child: Text(
-              'Pay in-store with your PIN to activate contactless',
-              style: TextStyle(
-                color: const Color(0xFF08080C) /* content-heading-default */,
-                fontSize: 22,
-                fontFamily: 'General Sans',
-                fontWeight: FontWeight.w700,
-                height: 1.20,
-                letterSpacing: 0.30,
-              ),
+          Text(
+            'Pay in-store with your PIN to activate contactless',
+            style: TextStyle(
+              color: const Color(0xFF08080C) /* content-heading-default */,
+              fontSize: 22,
+              fontFamily: 'General Sans',
+              fontWeight: FontWeight.w700,
+              height: 1.20,
+              letterSpacing: 0.30,
             ),
           ),
-          SizedBox(
-            width: 361,
-            child: Text(
-              'Or withdraw cash from an ATM. You only have to do this the first time.',
-              style: TextStyle(
-                color: const Color(0xFF3B4454) /* content-subtext-default */,
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 1.54,
-                letterSpacing: -0.09,
-              ),
+          Text(
+            'Or withdraw cash from an ATM. You only have to do this the first time.',
+            style: TextStyle(
+              color: const Color(0xFF3B4454) /* content-subtext-default */,
+              fontSize: 14,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 1.54,
+              letterSpacing: -0.09,
             ),
           ),
         ],
